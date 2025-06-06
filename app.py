@@ -1,6 +1,6 @@
 # app.py - Main Flask application (Render optimized)
 from flask import Flask, render_template, request, jsonify, send_file
-from groq import Groq
+import groq
 import os
 from datetime import datetime
 from fpdf import FPDF
@@ -132,7 +132,12 @@ def generate_report():
         # Call Groq API
         try:
             logger.info("Calling Groq API")
-            client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+    
+            # Initialize Groq client with explicit import to avoid proxy issues
+            import groq
+            client = groq.Groq(
+                api_key=os.getenv('GROQ_API_KEY')
+            )
             
             response = client.chat.completions.create(
                 model="llama-3.1-70b-versatile",  # or "mixtral-8x7b-32768"
